@@ -10,9 +10,10 @@
  * be what you would consider a production quality api.
  */
 var express = require("express");
-var Sequelize = require("sequelize");
+import {Sequelize} from 'sequelize'
 var app = express();
 var bodyParser = require("body-parser");
+import {User} from './data/db/entities/index'
 
 // Using `public` for static files: http://expressjs.com/en/starter/static-files.html
 app.use(express.static("public"));
@@ -32,7 +33,7 @@ var sequelize = new Sequelize("database", "", "", {
   // Data is stored in the file `database.sqlite` in the folder `db`.
   // Note that if you leave your app public, this database file will be copied if
   // someone forks your app. So don't use it to store sensitive information.
-  storage: "/sandbox/src/db/database.sqlite"
+  storage: "./src/repository/db/database.sqlite"
 });
 
 // authenticate with the database
@@ -50,14 +51,6 @@ interface IUser {
   lastName: string;
 }
 
-const User = sequelize.define("users", {
-  firstName: {
-    type: (Sequelize as any)["STRING"]
-  },
-  lastName: {
-    type: (Sequelize as any)["STRING"]
-  }
-});
 
 app.get("/", function (request, response) {
   response.sendFile("/sandbox/public/index.html");
@@ -147,6 +140,6 @@ app.get(
 );
 
 // Listen on port 8080
-var listener = app.listen(8088, function () {
+var listener = app.listen(9000, function () {
   console.log("Listening on port " + listener.address().port);
 });
