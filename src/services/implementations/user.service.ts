@@ -11,11 +11,11 @@ export class UserService extends BaseService implements IUserService {
         let responseObject = new GenericResponse<IUser>();
         let repoResult = await this.userRepo.getUsers();
         if (repoResult.successful) {
-            responseObject.data=repoResult.data;
-            responseObject.successful=true;
+            responseObject.data = repoResult.data;
+            responseObject.successful = true;
         }
         else {
-            responseObject.successful=false;
+            responseObject.successful = false;
         }
 
         return responseObject;
@@ -24,13 +24,13 @@ export class UserService extends BaseService implements IUserService {
         let responseObject = new GenericResponse<IUser>();
         let repoResult = await this.userRepo.deleteUser(id);
         if (repoResult.successful) {
-            responseObject.data=repoResult.data;
-            responseObject.successful=true;
+            responseObject.data = repoResult.data;
+            responseObject.successful = true;
             responseObject.message = 'Successfully deleted User!'
         }
         else {
-            responseObject.successful=false;
-            responseObject.errors=repoResult.err;
+            responseObject.successful = false;
+            responseObject.errors = repoResult.err;
 
         }
 
@@ -40,23 +40,23 @@ export class UserService extends BaseService implements IUserService {
 
     async addUser({ firstName, lastName }) {
         let responseObject = new GenericResponse<IUser>();
-        const repoRes = (await this.userRepo.userExists({firstName,lastName}));
+        const repoRes = (await this.userRepo.userExists({ firstName, lastName }));
         if (!repoRes.successful) {
-            responseObject.successful =false;
+            responseObject.successful = false;
             responseObject.errors = ['User Already Exists!'];
             return responseObject;
         } else {
-            let repoRes:RepoResult<IUser> = await this.userRepo.addUser({
+            let repoRes: RepoResult<IUser> = await this.userRepo.addUser({
                 firstName: firstName,
                 lastName: lastName
             });
-            responseObject.successful=repoRes.successful;
-            responseObject.message='User Added successfully!';
+            responseObject.successful = repoRes.successful;
+            responseObject.message = 'User Added successfully!';
             responseObject.data = repoRes.data;
             responseObject.errors = repoRes.errors;
             return responseObject;
 
-        //todo ad user added to return 
+            //todo ad user added to return 
         }
     }
 
@@ -68,8 +68,10 @@ export class UserService extends BaseService implements IUserService {
             return new RepoResult(false, null, "User doesn't exist");
         } else {
             const u = repoRes.data;
-            u.firstName = firstName;
-            u.lastName = lastName;
+            if (firstName)
+                u.firstName = firstName;
+            if (lastName)
+                u.lastName = lastName;
             this.userRepo.updateUser(u);
             return new RepoResult(true, u, []);
         }

@@ -30,7 +30,8 @@ export class Application {
   public runMigrationsAndSeedData(): void {
     var  $this=  this;
      this._migration.migrateTables(()=>{},function(){
-      //$this._migration.seedData(()=>{},()=>{});
+      $this._migration.seedData(()=>{},()=>{});
+      //can be commented later but for the sake of application running smo0th at the begining it was added here 
     });
 
   }
