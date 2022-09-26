@@ -1,3 +1,4 @@
-export interface IBaseRepo{
+export interface IBaseRepo<T>{
    
+  
 }
