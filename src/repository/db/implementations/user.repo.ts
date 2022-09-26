@@ -1,21 +1,21 @@
 import { IUserRepo } from "../interfaces/iuser.repo";
-import {User} from '../../../data/db/models/user.models'
+import { User } from '../../../data/db/models/user.models'
 import { RepoResult } from "../repoResult";
 import { IUser } from "../../../faceModels";
 export class UserRepo implements IUserRepo {
 
     async getUsers() {
 
-        let users= (((await User.findAll({raw:true})) as any) as IUser[]);
-        return new RepoResult(true,users);
+        let users = (((await User.findAll({ raw: true })) as any) as IUser[]);
+        return new RepoResult(true, users);
     }
     async deleteUser(id: number) {
 
-       
-        let userToBeDeleted =( await this.getById(id));
 
-        if(!userToBeDeleted.successful){
-          return  new RepoResult<IUser>(false,null,'User Does Not Exists!');
+        let userToBeDeleted = (await this.getById(id));
+
+        if (!userToBeDeleted.successful) {
+            return new RepoResult<IUser>(false, null, 'User Does Not Exists!');
         }
 
 
@@ -24,7 +24,7 @@ export class UserRepo implements IUserRepo {
                 id
             }
         });
-        return new RepoResult(true,userToBeDeleted.data);
+        return new RepoResult(true, userToBeDeleted.data);
         //todo specify which user was deleted
 
     }
@@ -37,13 +37,13 @@ export class UserRepo implements IUserRepo {
             }
         });
         if (existingUser && existingUser.length > 0) {
-            return new RepoResult(false,null,"User already exists");
+            return new RepoResult(false, null, "User already exists");
         } else {
-          let UserAdded  =   await User.create({
+            let UserAdded = await User.create({
                 firstName: firstName,
                 lastName: lastName
             }) as IUser;
-            return new RepoResult(true,UserAdded);
+            return new RepoResult(true, UserAdded);
 
 
         }
@@ -51,45 +51,45 @@ export class UserRepo implements IUserRepo {
 
     async updateUser({ id, firstName, lastName }) {
 
-        
+
         const existingUsers = await User.findAll({
             where: {
                 id
             }
         });
         if (!existingUsers || existingUsers.length === 0) {
-            return new RepoResult(false,null,"User doesn't exist");
+            return new RepoResult(false, null, "User doesn't exist");
         } else {
             const u = existingUsers[0];
             u.firstName = firstName;
             u.lastName = lastName;
             u.save();
-            return new RepoResult(true,u,[]);
+            return new RepoResult(true, u, []);
         }
 
 
     };
 
 
-    
-    async userExists({firstName,lastName}) {
+
+    async userExists({ firstName, lastName }) {
 
         const existingUsers = await User.findAll({
             where: {
                 firstName,
                 lastName
             },
-            raw:true
+            raw: true
         });
         if (!existingUsers || existingUsers.length === 0) {
-            return new RepoResult(true,null);
+            return new RepoResult(true, null);
         } else {
-          
-            return new RepoResult(false,null);
+
+            return new RepoResult(false, null);
         }
     };
 
-    async getById(id:number){
+    async getById(id: number) {
 
         const existingUsers = await User.findAll({
             where: {
@@ -97,10 +97,10 @@ export class UserRepo implements IUserRepo {
             }
         });
         if (!existingUsers || existingUsers.length === 0) {
-            return new RepoResult(false,null);
+            return new RepoResult(false, null);
         } else {
-          
-            return new RepoResult(true,existingUsers[0]);
+
+            return new RepoResult(true, existingUsers[0]);
         }
     }
 
