@@ -10,10 +10,10 @@
  * be what you would consider a production quality api.
  */
 var express = require("express");
-import {Sequelize} from 'sequelize'
+import {sequelize} from './data/db/models/index'
 var app = express();
 var bodyParser = require("body-parser");
-import {User} from './data/db/entities/index'
+import {User} from './data/db/models/otherIndex'
 
 // Using `public` for static files: http://expressjs.com/en/starter/static-files.html
 app.use(express.static("public"));
@@ -22,20 +22,9 @@ app.use(express.static("public"));
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 // setup a new database using database credentials set in .env
-var sequelize = new Sequelize("database", "", "", {
-  host: "0.0.0.0",
-  dialect: "sqlite",
-  pool: {
-    max: 5,
-    min: 0,
-    idle: 10000
-  },
-  // Data is stored in the file `database.sqlite` in the folder `db`.
-  // Note that if you leave your app public, this database file will be copied if
-  // someone forks your app. So don't use it to store sensitive information.
-  storage: "./src/repository/db/database.sqlite"
-});
+/*
 
+*/
 // authenticate with the database
 sequelize
   .authenticate()
@@ -57,7 +46,8 @@ app.get("/", function (request, response) {
 });
 
 app.get("/initdata", async (req, res) => {
-  await User.sync({ force: true }); // Force drop table if already exists
+await User.drop()
+  //await User.sync({ force: true }); // Force drop table if already exists
 
   const usersWrite = [
     ["John", "Hancock"],
@@ -65,15 +55,15 @@ app.get("/initdata", async (req, res) => {
     ["Ahmed", "Khan"]
   ];
 
-  await User.bulkCreate(
-    usersWrite.map(([firstName, lastName]) => ({ firstName, lastName }))
-  );
+ // await User.bulkCreate(
+ //   usersWrite.map(([firstName, lastName]) => ({ firstName, lastName }))
+ // );
 
   res.send("Completed Data Initialization");
 });
 
 app.get("/users", async (req, res) => {
-  await User.sync();
+  //await User.sync();
   const users = ((await User.findAll()) as any) as IUser[];
   res.jsonp(users);
 });
