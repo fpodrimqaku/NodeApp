@@ -1,13 +1,13 @@
 export class RepoResult<T>{
 
     constructor(successful, data, ...errors) {
-        successful = successful;
-        errors = errors;
-        data = data;
+        this.successful = successful;
+        this.errors = errors;
+        this.data = data;
     }
 
     successful: Boolean
-    errors: []
+    errors: String[]
     data: T
     //YOU CAN ADD OTHER VARS HERE SUCH AS STATUSES ETC
 }

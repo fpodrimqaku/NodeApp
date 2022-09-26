@@ -20,7 +20,7 @@ export class UserService extends BaseService implements IUserService {
 
         return responseObject;
     }
-    async deleteUser(id: Number) {
+    async deleteUser(id: number) {
         let responseObject = new GenericResponse<IUser>();
         let repoResult = await this.userRepo.deleteUser(id);
         if (repoResult.successful) {
@@ -30,6 +30,8 @@ export class UserService extends BaseService implements IUserService {
         }
         else {
             responseObject.successful=false;
+            responseObject.errors=repoResult.err;
+
         }
 
         return responseObject;
@@ -38,8 +40,9 @@ export class UserService extends BaseService implements IUserService {
 
     async addUser({ firstName, lastName }) {
         let responseObject = new GenericResponse<IUser>();
-        const repoRes:RepoResult<IUser> = (await this.userRepo.userExists({firstName,lastName})).data;
-        if (repoRes.successful) {
+        const repoRes = (await this.userRepo.userExists({firstName,lastName}));
+        if (!repoRes.successful) {
+            responseObject.successful =false;
             responseObject.errors = ['User Already Exists!'];
             return responseObject;
         } else {
@@ -60,7 +63,7 @@ export class UserService extends BaseService implements IUserService {
     async updateUser({ id, firstName, lastName }) {
 
 
-        const repoRes:RepoResult<IUser> = await this.userRepo.getById(id);
+        const repoRes = await this.userRepo.getById(id);
         if (!repoRes.successful) {
             return new RepoResult(false, null, "User doesn't exist");
         } else {

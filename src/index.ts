@@ -24,6 +24,7 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false });
 import { Application } from "./application";
 
 const application: Application = new Application();
+application.runMigrationsAndSeedData();
 application.startServer();
 
 

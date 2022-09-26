@@ -1,7 +1,7 @@
-const { Sequelize, DataTypes } = require('sequelize');
-const sequelizeInstance = new Sequelize('sqlite::memory:');
-
-const User = sequelizeInstance.define('User', {
+const {  DataTypes } = require('sequelize');
+//const sequelizeInstance = new Sequelize('../../../repository/db/database.sqlite');
+import {sequelize } from "./index";
+const User = sequelize.define('User', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,

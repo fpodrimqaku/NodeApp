@@ -9,27 +9,27 @@ export class UsersController {
     }
   
     public async getAllUsers(request: Request, response: Response, next: NextFunction): Promise<any> {
-      let res =  this._service
+      let res = await this._service
         .getUsers();
-       return response.status(200).send(res)
+      return response.status(200).send(res)
     }
 
 
     public async deleteUser(request: Request, response: Response, next: NextFunction): Promise<any> {
-      let res =  this._service
-      .deleteUser(request.body);
+      let res = await this._service
+      .deleteUser(new Number (request.params.id));
       return response.status(200).send(res)
 
     };
     public async addUser(request: Request, response: Response, next: NextFunction): Promise<any> {
 
-      let res =  this._service
+      let res = await this._service
       .addUser(request.body);
       return response.status(200).send(res)
     };
     public async updateUser(request: Request, response: Response, next: NextFunction): Promise<any> {
-      let res =  this._service
-      .addUser(request.body);
+      let res = await this._service
+      .updateUser(request.body);
       return response.status(200).send(res)
     };
 

@@ -4,7 +4,12 @@
     "password": null,
     "database": "database_development",
     "host": "./src/repository/db/database.sqlite",
-    "dialect": "sqlite"
+    "dialect": "sqlite",
+    "pool": {
+      "max": 5,
+      "min": 0,
+      "idle": 10000
+    }
   },
   "test": {
     "username": "root",

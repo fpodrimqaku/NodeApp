@@ -1,21 +1,30 @@
 import { IUserRepo } from "../interfaces/iuser.repo";
-import { User } from '../../../data/db/models/otherIndex'
+import {User} from '../../../data/db/models/user.models'
 import { RepoResult } from "../repoResult";
+import { IUser } from "../../../faceModels";
 export class UserRepo implements IUserRepo {
 
     async getUsers() {
 
-        let users= await ((await User.findAll()) as any);
+        let users= ((await User.findAll({raw:true})) as any) as IUser[];
         return new RepoResult(true,users);
     }
-    async deleteUser(id: Number) {
+    async deleteUser(id: number) {
+
+       
+        let userToBeDeleted =( await this.getById(id));
+
+        if(!userToBeDeleted.successful){
+          return  new RepoResult<IUser>(false,null,'User Does Not Exists!');
+        }
+
 
         await User.destroy({
             where: {
                 id
             }
         });
-        return new RepoResult(true,null);
+        return new RepoResult(true,userToBeDeleted.data);
         //todo specify which user was deleted
 
     }
@@ -30,11 +39,11 @@ export class UserRepo implements IUserRepo {
         if (existingUser && existingUser.length > 0) {
             return new RepoResult(false,null,"User already exists");
         } else {
-            await User.create({
+          let UserAdded  =   await User.create({
                 firstName: firstName,
                 lastName: lastName
-            });
-            return new RepoResult(true,null);
+            }) as IUser;
+            return new RepoResult(true,UserAdded);
 
 
         }
@@ -69,7 +78,8 @@ export class UserRepo implements IUserRepo {
             where: {
                 firstName,
                 lastName
-            }
+            },
+            raw:true
         });
         if (!existingUsers || existingUsers.length === 0) {
             return new RepoResult(true,null);
@@ -77,11 +87,9 @@ export class UserRepo implements IUserRepo {
           
             return new RepoResult(false,null);
         }
-
-
     };
 
-    async getById(id:Number){
+    async getById(id:number){
 
         const existingUsers = await User.findAll({
             where: {
@@ -89,10 +97,10 @@ export class UserRepo implements IUserRepo {
             }
         });
         if (!existingUsers || existingUsers.length === 0) {
-            return new RepoResult(true,null);
+            return new RepoResult(false,null);
         } else {
           
-            return new RepoResult(false,null);
+            return new RepoResult(true,existingUsers[0]);
         }
     }
 
