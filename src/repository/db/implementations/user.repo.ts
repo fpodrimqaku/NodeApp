@@ -6,7 +6,7 @@ export class UserRepo implements IUserRepo {
 
     async getUsers() {
 
-        let users= ((await User.findAll({raw:true})) as any) as IUser[];
+        let users= (((await User.findAll({raw:true})) as any) as IUser[]);
         return new RepoResult(true,users);
     }
     async deleteUser(id: number) {
